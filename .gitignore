@@ -1,0 +1,10 @@
+# PlatformIO
+.pio/
+.vscode/
+
+# Local environment configuration
+/include/env.h
+
+# Build artifacts
+build/
+*.o
