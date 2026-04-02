@@ -15,10 +15,11 @@ This project implements a LoRaWAN receiver on a Heltec WiFi LoRa 32 (V3) board. 
 *   **MQTT Publishing**: Publishes validated LoRa data in JSON format to a configurable MQTT topic, including RSSI and SNR.
 *   **MQTT Heartbeat**: Periodically publishes an MQTT message (`radiolib/heartbeat`) with device uptime, IP address, WiFi RSSI, and UTC timestamp, indicating the device is operational.
 *   **NTP Time Synchronization**: Synchronizes device time with NTP servers for accurate UTC timestamps in logs and heartbeat messages.
-*   **Over-the-Air (OTA) Updates**: Allows wireless firmware updates over Wi-Fi, simplifying deployment and maintenance.
-*   **Balanced Partitioning**: Uses a custom `partitions_8mb.csv` with two equal 3.5MB app slots to ensure reliable OTA updates for the ~900KB firmware.
-*   **Remote WebSerial Logging**: Provides a web-based interface at `http://<DEVICE_IP>/webserial` to view real-time log output, mirroring the Serial Monitor.
-*   **Web-based Device Reboot**: Includes a button on the device's main web page (`http://<DEVICE_IP>/`) to remotely trigger a soft reboot.
+*   **Over-the-Air (OTA) Updates**: Allows wireless firmware updates over Wi-Fi, supporting the standard `espota` protocol on port 3232.
+*   **mDNS Discovery**: The device is discoverable on the network as `homenode.local`.
+*   **Balanced Partitioning**: Uses a custom `partitions_8mb.csv` with two equal 3.5MB app slots to ensure reliable OTA updates for the firmware.
+*   **Remote WebSerial Logging**: Provides a web-based interface at `http://homenode.local/webserial` to view real-time log output, mirroring the Serial Monitor.
+*   **Web-based Device Reboot**: Includes a button on the device's main web page (`http://homenode.local/`) to remotely trigger a soft reboot.
 *   **Modular Codebase**: Clean separation of concerns with dedicated files for Logger and Web Route definitions.
 *   **Secure Credential Management**: Wi-Fi and MQTT credentials are externalized to `include/env.h` and ignored by Git, ensuring sensitive information is not exposed in version control.
 
@@ -48,20 +49,18 @@ This project implements a LoRaWAN receiver on a Heltec WiFi LoRa 32 (V3) board. 
     *   Edit `include/env.h` and replace the placeholder values.
 
 3.  **Initial Firmware Upload (USB)**:
-    *   Connect your Heltec V3 board via USB.
-    *   **Note**: If the node is currently running Meshtastic firmware, this USB flash is **mandatory** to establish the `partitions_8mb.csv` layout.
-    *   Flash using PlatformIO:
-        ```bash
-        pio run -t upload --upload-protocol esptool --upload-port /dev/ttyUSB0
-        ```
+    Connect your Heltec V3 via USB and flash using PlatformIO:
+    ```bash
+    pio run -t upload --upload-protocol esptool
+    ```
 
-4.  **Over-the-Air (OTA) Updates**:
-    *   Once the initial flash is done, future updates can be performed over Wi-Fi.
-    *   Update the `upload_port` in `platformio.ini` to the device's IP.
+4.  **Future Over-the-Air (OTA) Updates**:
+    *   Once this firmware is running, update the `upload_port` in `platformio.ini` to `homenode.local`.
     *   Flash via OTA:
         ```bash
         pio run -t upload
         ```
+
 
 ## ⚠️ Important Note: Radio Settings ⚠️
 
